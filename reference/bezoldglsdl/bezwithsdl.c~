@@ -1,0 +1,49 @@
+#include"all.h"
+int main(int argc, char **argv){
+	
+	if(SDL_Init(SDL_INIT_VIDEO) != 0){
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,"ERROR-init",SDL_GetError(),NULL);
+		return 1;
+	}
+
+	SDL_Window *window;
+	SDL_GLContext context;
+
+	window = SDL_CreateWindow("glPlz",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,ScreenWidth,ScreenHeight,SDL_WINDOW_OPENGL);
+
+	if(window == NULL){
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,"ERROR-window",SDL_GetError(),NULL);
+		return 1;	
+	}
+	
+	context = SDL_GL_CreateContext(window);
+
+	if(SDL_GL_SetSwapInterval(0) != 0){
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,"ERROR-window",SDL_GetError(),NULL);
+		return 1;	
+	}
+	
+	while(1){
+		display(window);
+	}
+
+	SDL_GL_DeleteContext(context);
+
+	SDL_DestroyWindow(window);
+	
+	SDL_Quit();
+
+	return 0;
+}
+
+	void display(SDL_Window *winLoc){		
+			
+		setRand();
+
+		drawPatch();
+	
+		SDL_GL_SwapWindow(winLoc);
+
+		//SDL_Delay(waitTime);
+
+	}
