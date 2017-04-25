@@ -9,7 +9,6 @@ void signal_callback_handler(int signum)
 
 int main(int argc, char **argv)
 {
-
 	signal(SIGINT, signal_callback_handler);
 
 	if(SDL_Init(SDL_INIT_VIDEO) != 0){
@@ -22,7 +21,7 @@ int main(int argc, char **argv)
 	SDL_Window *window;
 	SDL_GLContext context;
 
-	window = SDL_CreateWindow("glPlz",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,ScreenWidth,ScreenHeight,SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL|SDL_WINDOW_FULLSCREEN_DESKTOP|SDL_WINDOW_BORDERLESS|SDL_WINDOW_INPUT_GRABBED);
+	window = SDL_CreateWindow("glPlz",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,ScreenWidth,ScreenHeight,SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL);
 
 	if(window == NULL){
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,"ERROR-window",SDL_GetError(),NULL);
@@ -44,7 +43,7 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	 SDL_ShowCursor(SDL_DISABLE);
+	 //SDL_ShowCursor(SDL_DISABLE);
 
 	while(1)
 	{

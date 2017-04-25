@@ -15,45 +15,62 @@ void setPoints()
 			bez[i][j].y = drand48() * 2 -1;
 			bez[i][j].z = drand48() * 2 -1;
 
-			printf("x:%f y:%f z:%f,i:%d j:%d\n", bez[i][j].x,bez[i][j].y,bez[i][j].z,i,j);
+			//printf("x:%f y:%f z:%f,i:%d j:%d\n", bez[i][j].x,bez[i][j].y,bez[i][j].z,i,j);
 		}
 	}
 
-	bez[0][0].x = 1.f; bez[0][0].y = 1.f; bez[0][0].z = 1.f;
-	bez[0][3].x = 1.f; bez[0][3].y = -1.f;bez[0][3].z = 1.f;
-	bez[3][0].x = -1.f;bez[3][0].y = 1.f; bez[3][0].z = 1.f;
-	bez[3][3].x = -1.f;bez[3][3].y = -1.f;bez[3][3].z = 1.f;
-}
+	//bez[0][0].x = -1.f;bez[0][0].y = 1.f; bez[0][0].z = 0.f;
+	//bez[0][3].x = 1.f; bez[0][3].y = 1.f; bez[0][3].z = 0.f;
+	//bez[3][0].x = -1.f;bez[3][0].y = -1.f; bez[3][0].z = 0.f;
+	//bez[3][3].x = 1.f; bez[3][3].y = -1.f;bez[3][3].z = 0.f;
 
+	//bez[0][1].x =-1.f;bez[0][1].y = .75f; bez[0][1].z = 0.f;
+	//bez[0][1].x =-1.f;bez[0][1].y = .25f; bez[0][1].z = 0.f;
+}
 
 void drawPatch()
 {
 	int i;
+	int numStepPoints;
 	float u , v, x, y, z,step;
 	setRand();
 	glClear(GL_COLOR_BUFFER_BIT);
-	glBegin (GL_POINTS);
+	if(LINEDOT == 1)
+	{
+		glBegin(GL_LINES);
+	}
+	else
+	{
+		glBegin (GL_POINTS);
+	}
+
 	for(i=0;i<NUMBERBEZ;i++)
 	{
 		setPoints();
-		glColor3d(drand48(),drand48(),drand48());
+		//glColor3d(drand48(),drand48(),drand48());
+
 		if(!FIXEDSTEP)
 		{
-			step = STEP*((i*2)+1);
-			//printf("%f\n",step);
+				step = STEP*((i*2)+1);
 		}
 		else step = STEP;
 
-		for(u = 0;u<1.0;u+=step)
+		numStepPoints = (1/step) + 1;
+
+		points stepPoints[numStepPoints][numStepPoints];
+		int row, col;
+		row = col = 0;
+
+		for(u = 0;u<=1.0;u+=step)
 		{
-			for(v = 0;v<1.0;v+=step)
+			for(v = 0;v<=1.0;v+=step)
 			{
 				float uu = (1.0-u) * (1.0-u);
 				float vv = (1.0 - v) * (1.0 - v);
 				float uuu = (1.0 - u) * (1.0 - u) * (1.0 - u);
 				float vvv = (1.0 - v) * (1.0 - v) * (1.0 - v);
 
-				x = uuu * vvv * bez[0][0].x +
+				stepPoints[row][col].x = uuu * vvv * bez[0][0].x +
 				    uuu * 3 * v * vv * bez[0][1].x +
 				    uuu * 3 * (v * v) * (1.0-v) * bez[0][2].x +
 				    uuu * (v * v * v) * bez[0][3].x +
@@ -73,7 +90,7 @@ void drawPatch()
 				    (u * u * u) * 3 * (v * v) * (1.0 - v) * bez[3][2].x +
 				    (u * u * u) * (v * v * v) * bez[3][3].x;
 
-				y = uuu * vvv * bez[0][0].y +
+				stepPoints[row][col].y = uuu * vvv * bez[0][0].y +
 				    uuu * 3 * v * vv * bez[0][1].y +
 				    uuu * 3 * (v * v) * (1.0-v) * bez[0][2].y +
 				    uuu * (v * v * v) * bez[0][3].y +
@@ -94,7 +111,7 @@ void drawPatch()
 				    (u * u * u) * (v * v * v) * bez[3][3].y;
 
 
-				z = uuu * vvv * bez[0][0].z +
+				stepPoints[row][col].z = uuu * vvv * bez[0][0].z +
 				    uuu * 3 * v * vv * bez[0][1].z +
 				    uuu * 3 * (v * v) * (1.0-v) * bez[0][2].z +
 				    uuu * (v * v * v) * bez[0][3].z +
@@ -114,15 +131,74 @@ void drawPatch()
 				    (u * u * u) * 3 * (v * v) * (1.0 - v) * bez[3][2].z +
 				    (u * u * u) * (v * v * v) * bez[3][3].z;
 
-						if (u == 0 && v == 0) {
-							printf("NX:%f NY:%f NZ:%f\n",x,y,z);
-						}
+					glColor3d(drand48(),drand48(),drand48());
+				if(LINEDOT == 1)
+				{
 
-				glVertex3f(x,y,z);
+					if(!row ==  0)//do draw left 
+					{
+						glVertex3f(stepPoints[row][col].x,stepPoints[row][col].y,stepPoints[row][col].z);
+						glVertex3f(stepPoints[row-1][col].x,stepPoints[row-1][col].y,stepPoints[row-1][col].z);
+						//glVertex3f(stepPoints[row][col-1].x,stepPoints[row][col-1].y,stepPoints[row][col-1].z);
+					}
+					
+					if(!col == 0)//do draw up
+					{
+						glVertex3f(stepPoints[row][col].x,stepPoints[row][col].y,stepPoints[row][col].z);
+						glVertex3f(stepPoints[row][col-1].x,stepPoints[row][col-1].y,stepPoints[row][col-1].z);
+						//glVertex3f(stepPoints[row-1][col].x,stepPoints[row-1][col].y,stepPoints[row-1][col].z);
+					}
+
+					col++;
+				}
+				else
+				{
+					glVertex3f(x,y,z);
+				}
+				
+
+				
+			}
+		row++;
+		col = 0;
+		}
+		glEnd();
+		glFlush();
+		glPointSize(3); 
+		glBegin(GL_POINTS);
+		glColor3d(255,0,0);
+		/*for(int i = 0;i < numStepPoints;i++)
+		{
+			for(int j = 0;j < numStepPoints;j++)
+			{	
+				glVertex3f(stepPoints[i][j].x,stepPoints[i][j].y,stepPoints[i][j].z);
+
+				if(stepPoints[i][j].x >= 1 || stepPoints[i][j].x <= -1)
+				{
+					printf("X i:%d j:%d\n",i,j);
+				}
+				if(stepPoints[i][j].y >= 1 || stepPoints[i][j].y <= -1)
+				{
+					printf("Y i:%d j:%d\n",i,j);
+				}
+				if(stepPoints[i][j].z >= 1 || stepPoints[i][j].z <= -1)
+				{
+					printf("Z i:%d j:%d\n",i,j);
+				}
+
+				printf("X:%f Y:%f Z:%f\n",stepPoints[i][j].x,stepPoints[i][j].y,stepPoints[i][j].z);
+			}		
+		}*/
+
+		for(int i = 0;i<4;i++)
+		{
+			for(int j = 0;j<4;j++)
+			{
+				glVertex3f(bez[i][j].x,bez[i][j].y,bez[i][j].z);
+				printf("point: i:%d j:%d\n",i,j);
 			}
 		}
+		glEnd();
+		glFlush();
 	}
-
-	glEnd();
-	glFlush();
 }
