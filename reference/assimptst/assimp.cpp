@@ -12,8 +12,21 @@
 #include <assimp/postprocess.h>
 
 
-
 const struct aiScene *scene = NULL;
+
+struct aFace {
+	int numVerts;
+	
+};
+
+void faceAdd (f1)
+{
+	scene->mMeshes[0]->mNumVertices += 3;
+	scene->mMeshes[0]->mNumFaces += 1;
+	scene->mMeshes[0]->mMeshes[mNumMeshes - 1] 
+
+}
+
 
 int main()
 {
@@ -33,7 +46,6 @@ int main()
 	}
 
   printf("%u meshes\n", scene->mNumMeshes);
-
   printf("%u materials\n", scene->mNumMaterials);
 
   for (size_t i = 0; i < scene->mNumMaterials; i++)
