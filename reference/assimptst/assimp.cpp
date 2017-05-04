@@ -23,8 +23,8 @@ void faceAdd (f1)
 {
 	scene->mMeshes[0]->mNumVertices += 3;
 	scene->mMeshes[0]->mNumFaces += 1;
-	scene->mMeshes[0]->mMeshes[mNumMeshes - 1] 
-
+	//scene->mMeshes[mNumMeshes - 1] 
+	
 }
 
 
