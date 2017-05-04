@@ -2,7 +2,7 @@ CCFLAGS = g++
 
 Executable = assimp
 
-SourceFiles = assimp.cpp #modelhead.cpp /home/cooldylan/programing/Graphics/DisplayEngine2/model.cpp
+SourceFiles = assimp.cpp
 
 LinkerFlags = -lassimp
 
