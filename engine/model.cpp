@@ -135,6 +135,7 @@ bool MODEL::formatSupported(std::string format) // can be made static
 
 bool MODEL::render(glm::mat4 View,glm::mat4 Projection,struct ENGINEDATA &gamedata)
 {
+    /*
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //add error checking
 
@@ -169,6 +170,16 @@ bool MODEL::render(glm::mat4 View,glm::mat4 Projection,struct ENGINEDATA &gameda
     
     glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+
+    */
+
+    bool test = true;
+
+    glBegin(GL_TRIANGLES);
+    glVertex3f(-0.5, 0, 0);
+    glVertex3f( 0.5, 0.5, 0);
+    glVertex3f( 0.5,-0.5, 0);
+    glEnd();
 
     return true;
 }
