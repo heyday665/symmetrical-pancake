@@ -100,7 +100,8 @@ int main()
   const struct aiScene *scene2 = new aiScene();
   std::cout << scene2->HasMeshes() << std::endl;
 
-  aiReleaseImport(scene); //for c
+
+  aiReleaseImport (scene); //for c
   //aiDetachAllLogStreams(); //for c
 
 }
