@@ -14,18 +14,9 @@ void setPoints()
 			bez[i][j].x = drand48() * 2 -1;
 			bez[i][j].y = drand48() * 2 -1;
 			bez[i][j].z = drand48() * 2 -1;
-
-			//printf("x:%f y:%f z:%f,i:%d j:%d\n", bez[i][j].x,bez[i][j].y,bez[i][j].z,i,j);
 		}
 	}
 
-	//bez[0][0].x = -1.f;bez[0][0].y = 1.f; bez[0][0].z = 0.f;
-	//bez[0][3].x = 1.f; bez[0][3].y = 1.f; bez[0][3].z = 0.f;
-	//bez[3][0].x = -1.f;bez[3][0].y = -1.f; bez[3][0].z = 0.f;
-	//bez[3][3].x = 1.f; bez[3][3].y = -1.f;bez[3][3].z = 0.f;
-
-	//bez[0][1].x =-1.f;bez[0][1].y = .75f; bez[0][1].z = 0.f;
-	//bez[0][1].x =-1.f;bez[0][1].y = .25f; bez[0][1].z = 0.f;
 }
 
 void drawPatch()
@@ -56,6 +47,8 @@ void drawPatch()
 		else step = STEP;
 
 		numStepPoints = (1/step) + 1;
+
+		printf("%d\n",numStepPoints);
 
 		points stepPoints[numStepPoints][numStepPoints];
 		int row, col;
@@ -167,6 +160,7 @@ void drawPatch()
 		glPointSize(3); 
 		glBegin(GL_POINTS);
 		glColor3d(255,0,0);
+
 		/*for(int i = 0;i < numStepPoints;i++)
 		{
 			for(int j = 0;j < numStepPoints;j++)

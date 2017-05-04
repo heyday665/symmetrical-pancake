@@ -19,7 +19,7 @@ int main()
 {
   //Assimp::Importer importer;//importer.ReadFile("boxy2.ply",aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
 
-  scene = aiImportFile("Armadillo.ply",aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);//imports file by name with proceesses anded
+  scene = aiImportFile("boxy2.ply",aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);//imports file by name with proceesses anded
   if (scene == NULL)
   {
     printf("ERROR: file not read\n");
@@ -51,10 +51,20 @@ int main()
   {
     for (size_t j = 0; j < scene->mMeshes[i]->mNumFaces; j++)
     {
-      float x = scene->mMeshes[i]->mFaces[j].mIndices[0];
-      float y = scene->mMeshes[i]->mFaces[j].mIndices[1];
-      float z = scene->mMeshes[i]->mFaces[j].mIndices[2];
-      //printf("points x:%f,y:%f,z:%f\n", x,y,z);
+      float x = scene->mMeshes[i]->mVertices[(scene->mMeshes[i]->mFaces[j].mIndices[0])].x;
+      float y = scene->mMeshes[i]->mVertices[(scene->mMeshes[i]->mFaces[j].mIndices[0])].y;
+      float z = scene->mMeshes[i]->mVertices[(scene->mMeshes[i]->mFaces[j].mIndices[0])].z;
+      printf("points x:%f,y:%f,z:%f\n", x,y,z);
+
+      x = scene->mMeshes[i]->mVertices[(scene->mMeshes[i]->mFaces[j].mIndices[1])].x;
+      y = scene->mMeshes[i]->mVertices[(scene->mMeshes[i]->mFaces[j].mIndices[1])].y;
+      z = scene->mMeshes[i]->mVertices[(scene->mMeshes[i]->mFaces[j].mIndices[1])].z;
+      printf("points x:%f,y:%f,z:%f\n", x,y,z);
+
+      x = scene->mMeshes[i]->mVertices[(scene->mMeshes[i]->mFaces[j].mIndices[2])].x;
+      y = scene->mMeshes[i]->mVertices[(scene->mMeshes[i]->mFaces[j].mIndices[2])].y;
+      z = scene->mMeshes[i]->mVertices[(scene->mMeshes[i]->mFaces[j].mIndices[2])].z;
+      printf("points x:%f,y:%f,z:%f\n", x,y,z);
     }
   }
 
@@ -76,6 +86,9 @@ int main()
 }
 
   aiExportScene(scene,"ply","Testexp.ply",aiProcess_SplitLargeMeshes);
+
+  const struct aiScene *scene2 = new aiScene();
+  std::cout << scene2->HasMeshes() << std::endl;
 
   aiReleaseImport(scene); //for c
   //aiDetachAllLogStreams(); //for c

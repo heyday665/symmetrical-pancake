@@ -12,13 +12,13 @@ leavin for now as i want to learn some more before coming back
 #include <math.h>
 #include <signal.h>
 
-#define ScreenWidth 1280
-#define ScreenHeight 720
-#define waitTime 6000
-#define FIXEDSTEP 1
+#define ScreenWidth 1920
+#define ScreenHeight 1080
+#define waitTime 6000 //time between patch redrawings
+#define FIXEDSTEP 1 //0 for non fixed step 1 for fixed
 #define LINEDOT 1 //0 for dot 1 for line
-#define STEP .02
-#define NUMBERBEZ 1
+#define STEP .5 //step size .2
+#define NUMBERBEZ 1 //number of patches
 typedef struct{
 	float x ,y ,z;
 

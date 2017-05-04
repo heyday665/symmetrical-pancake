@@ -24,4 +24,7 @@ int main()
     std::cout << "model saved" << std::endl;
 
     test.formatSupported(path);
+
+    test.formatSupported(std::string("this is text"));
+
 }

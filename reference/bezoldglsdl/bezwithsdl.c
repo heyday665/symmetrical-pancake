@@ -21,7 +21,7 @@ int main(int argc, char **argv)
 	SDL_Window *window;
 	SDL_GLContext context;
 
-	window = SDL_CreateWindow("glPlz",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,ScreenWidth,ScreenHeight,SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL);
+	window = SDL_CreateWindow("glPlz",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,ScreenWidth,ScreenHeight,SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL|SDL_WINDOW_FULLSCREEN);
 
 	if(window == NULL){
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,"ERROR-window",SDL_GetError(),NULL);
