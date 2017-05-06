@@ -19,7 +19,7 @@ struct aFace {
 	
 };
 
-void faceAdd (f1)
+void faceAdd ()
 {
 	scene->mMeshes[0]->mNumVertices += 3;
 	scene->mMeshes[0]->mNumFaces += 1;
@@ -27,6 +27,17 @@ void faceAdd (f1)
 	
 }
 
+void buildscene()
+{
+   aiScene tscene;
+
+   tscene.mRootNode = new aiNode();
+
+   tscene.mMaterials = new aiMaterial *[1];
+   tscene.mNumMaterials = 1;
+
+
+}
 
 int main()
 {
@@ -83,9 +94,9 @@ int main()
       
       //scene->mMeshes[i]->mFaces[j].mIndices[0] = testNum;
       
-      float x = scene->mMeshes[i]->mFaces[j].mIndices[0];
-      float y = scene->mMeshes[i]->mFaces[j].mIndices[1];
-      float z = scene->mMeshes[i]->mFaces[j].mIndices[2];
+       x = scene->mMeshes[i]->mFaces[j].mIndices[0];
+       y = scene->mMeshes[i]->mFaces[j].mIndices[1];
+       z = scene->mMeshes[i]->mFaces[j].mIndices[2];
       printf("points x:%f, y:%f, z:%f\n", x, y, z);
     }
   }

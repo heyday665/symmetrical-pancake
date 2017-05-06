@@ -2,17 +2,42 @@
 
 	BEZMAKER::BEZMAKER()
 	{
+		step = 0.2f;
 		bez = new glm::vec3*[4];
-		for(int i = 0; i < 4; ++i){
-		  bez[i] = new glm::vec3[4];
+		for(int i = 0; i < 4; ++i)
+		{
+			bez[i] = new glm::vec3[4];
 		}
 	}
+
+	BEZMAKER::~BEZMAKER()
+	{
+		//frees
+	}
+
+	glm::vec3 ** BEZMAKER::getBez()
+	{
+		return bez;
+	}
+
+	int BEZMAKER::getNumStepPoints()
+	{
+		return numStepPoints;
+	}
   
-  void BEZMAKER::setRand()
-  {
-  	seed = time(0);
-  	srand48(seed);
-  }
+	void BEZMAKER::setRand()
+	{
+		seed = time(0);
+		srand48(seed);
+	}
+
+	void BEZMAKER::setStep(float stp)
+	{
+		if(stp > 0.0f)
+		{
+			step = stp;
+		}
+	}
 
 	void BEZMAKER::genControlPoints()
 	{
@@ -28,13 +53,17 @@
 	
 	void BEZMAKER::genPatchPoints()
 	{
-		int i, numStepPoints;
-		float u, v;
+		float u, v,uu,uuu,vv,vvv;
 
-			//numStepPoints = (1/step) + 1;
-			//printf("%d\n", numStepPoints);
+			numStepPoints = (1/step) + 1;
 
-			points stepPoints[numStepPoints][numStepPoints];
+			free(stepPoints);
+			stepPoints = new glm::vec3*[numStepPoints];
+			for(int i = 0; i < numStepPoints; i++)
+			{
+				stepPoints[i] = new glm::vec3[numStepPoints];
+			}
+
 			int row, col;
 			row = col = 0;
 
@@ -42,10 +71,10 @@
 			{
 				for(v = 0; v <= 1.0; v += step)
 				{
-					float uu = (1.0 - u) * (1.0 - u);
-					float vv = (1.0 - v) * (1.0 - v);
-					float uuu = (1.0 - u) * (1.0 - u) * (1.0 - u);
-					float vvv = (1.0 - v) * (1.0 - v) * (1.0 - v);
+					uu = (1.0 - u) * (1.0 - u);
+					vv = (1.0 - v) * (1.0 - v);
+					uuu = (1.0 - u) * (1.0 - u) * (1.0 - u);
+					vvv = (1.0 - v) * (1.0 - v) * (1.0 - v);
 
 					stepPoints[row][col].x = uuu * vvv * bez[0][0].x +
 						  uuu * 3 * v * vv * bez[0][1].x +
@@ -107,40 +136,13 @@
 						  (u * u * u) * 3 * v * vv * bez[3][1].z +
 						  (u * u * u) * 3 * (v * v) * (1.0 - v) * bez[3][2].z +
 						  (u * u * u) * (v * v * v) * bez[3][3].z;
+						  col++;
 				}
+			printf("Row %d COl %d",row,col);
 			row++;
 			col = 0;
 			}
 
-			/*for(int i = 0;i < numStepPoints;i++)
-			{
-				for(int j = 0;j < numStepPoints;j++)
-				{	
-					glVertex3f(stepPoints[i][j].x,stepPoints[i][j].y,stepPoints[i][j].z);
-
-					if(stepPoints[i][j].x >= 1 || stepPoints[i][j].x <= -1)
-					{
-						printf("X i:%d j:%d\n",i,j);
-					}
-					if(stepPoints[i][j].y >= 1 || stepPoints[i][j].y <= -1)
-					{
-						printf("Y i:%d j:%d\n",i,j);
-					}
-					if(stepPoints[i][j].z >= 1 || stepPoints[i][j].z <= -1)
-					{
-						printf("Z i:%d j:%d\n",i,j);
-					}
-
-					printf("X:%f Y:%f Z:%f\n",stepPoints[i][j].x,stepPoints[i][j].y,stepPoints[i][j].z);
-				}		
-			}*/
-
-			for(int i = 0;i<4;i++)
-			{
-				for(int j = 0;j<4;j++)
-				{
-					glVertex3f(bez[i][j].x,bez[i][j].y,bez[i][j].z);
-					printf("point: i:%d j:%d\n",i,j);
-				}
-			}
 	}
+
+	
