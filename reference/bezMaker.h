@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <time.h>   
 #include <glm/glm.hpp>
 
 class BEZMAKER
@@ -16,12 +17,14 @@ class BEZMAKER
 		void genPatchPoints();
 		void setStep(float);
 		glm::vec3** getBez();
+		int getNumStepPoints();
 		
 		
 	private:
 		glm::vec3 **bez;
 		glm::vec3 **stepPoints;	
 		float step;
+		int numStepPoints;
 		time_t seed;
 
 
