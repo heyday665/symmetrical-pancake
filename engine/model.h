@@ -7,6 +7,8 @@
 #include <GL/gl.h>
 #include <glm/glm.hpp>
 
+#include "bezMaker.h"
+
 class MODEL
 {
     public:
@@ -20,15 +22,18 @@ class MODEL
         void rotate(glm::vec4);
         void transform(glm::vec4);
         void scale(glm::vec4);
+        void updatePatch(float);
         std::string getFilePath();
     private:
         void sceneToVertlist();
         const struct aiScene *scene;
         std::string fileName,filePath;
         unsigned int IFlags,EFlags;
+        BEZMAKER bezList;
         GLuint vertexBuffer,colorBuffer;
         glm::mat4 ModelMatrix;
         std::vector<glm::vec3> vertlist;
+        int numStepPoints;
 };
 
 #endif

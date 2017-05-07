@@ -2,7 +2,7 @@ CCFLAGS = g++
 
 Executable = displayengine2
 
-SourceFiles = start.cpp modelreader.cpp settings.cpp keyboard.cpp mouse.cpp model.cpp
+SourceFiles = start.cpp modelreader.cpp settings.cpp keyboard.cpp mouse.cpp model.cpp bezMaker.cpp
 
 LinkerFlags = -lm -lSDL2 -lGL -lGLU -lGLEW -lassimp
 

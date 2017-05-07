@@ -11,6 +11,7 @@ struct SETTINGS_DATA
 {
   int screenWidth,screenHeight;
   std::string *windowName,*plyName;
+  float stepSize;
 };
 
 class SETTINGS

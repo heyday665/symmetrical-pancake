@@ -20,6 +20,7 @@ SETTINGS::SETTINGS()
   SETTINGS::Statsettings.screenHeight = SCREENHEIGHT;
   SETTINGS::Statsettings.windowName = new std::string("SDL_Window");
   SETTINGS::Statsettings.plyName = new std::string();
+  SETTINGS::Statsettings.stepSize = NULL;
 }
 
 struct SETTINGS_DATA SETTINGS::currentSettings()
@@ -35,6 +36,7 @@ void SETTINGS::parseCommandLine(int argc,char** argv)
     {"screenHeight",'h',"number",0,"Set screen height."},
     {"windowName",'n',"string",0,"Set window name."},
     {"plyName",'p',"file",0,"Name of ply file to load."},
+    {"stepSize",'s',"FLOAT",0,"size of the step for patch"},
     {0}
 	};
 
@@ -49,23 +51,24 @@ int SETTINGS::parse_opt(int key, char *arg, struct argp_state *state)
 		case 'w':
       int width; width = atoi(arg);
       if (width < SCREENWIDTH) width=SCREENWIDTH;
-     SETTINGS::Statsettings.screenWidth = width;
+      SETTINGS::Statsettings.screenWidth = width;
 
       break;
     case 'h':
       int height; height = atoi(arg);
       if(height < SCREENHEIGHT) height=SCREENHEIGHT;
-       SETTINGS::Statsettings.screenHeight = height;
+      SETTINGS::Statsettings.screenHeight = height;
       break;
     case 'n':
       delete Statsettings.windowName;
-       SETTINGS::Statsettings.windowName = new std::string(arg);
+      SETTINGS::Statsettings.windowName = new std::string(arg);
       break;
     case 'p':
-     delete Statsettings.plyName; // change to model path and make vector
+      delete Statsettings.plyName; // change to model path and make vector
       SETTINGS::Statsettings.windowName = new std::string(arg);// change this to a vector 
       break;
-
+    case 's':
+      SETTINGS::Statsettings.stepSize = atof(arg);
 	}
 	return 0;
 }

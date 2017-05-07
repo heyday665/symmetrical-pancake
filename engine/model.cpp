@@ -17,9 +17,11 @@ MODEL::MODEL()
     EFlags = aiProcess_SplitLargeMeshes;
     scene = NULL;
     vertexBuffer = 0;
-    glGenBuffers(1,&vertexBuffer);
-    glGenBuffers(1,&colorBuffer);
+    //glGenBuffers(1,&vertexBuffer);
+    //glGenBuffers(1,&colorBuffer);
     ModelMatrix = glm::mat4(1.0f);
+    bezList.setRand();
+    updatePatch(NULL);
 }
 
 MODEL::~MODEL()
@@ -133,52 +135,41 @@ bool MODEL::formatSupported(std::string format) // can be made static
     return true;
 }
 
+void MODEL::updatePatch(float stepsize)
+{
+    if(stepsize != NULL)
+    {
+        bezList.setStep(stepsize);
+    }
+    bezList.genControlPoints();
+    bezList.genPatchPoints();
+    numStepPoints = bezList.getNumStepPoints();
+}
+
 bool MODEL::render(glm::mat4 View,glm::mat4 Projection,struct ENGINEDATA &gamedata)
 {
-    /*
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //add error checking
+    glm::vec3** list = bezList.getSetpPoints();
 
-    glBindVertexArray(gamedata.vertexArrayID);
-    glBindBuffer(GL_ARRAY_BUFFER,vertexBuffer);
-
-    //assumed that it is tryangles do this for every mesh
-
-
-    glBufferData(GL_ARRAY_BUFFER,sizeof(glm::vec3)*vertlist.size(),&vertlist[0],GL_DYNAMIC_DRAW);//change to assimp
-
-    //glBindBuffer(GL_ARRAY_BUFFER,colorBuffer);
-	//glBufferData(GL_ARRAY_BUFFER,sizeof(g_color_buffer_data),g_color_buffer_data,GL_DYNAMIC_DRAW);
-
-    glUseProgram(gamedata.activeProgram); // grab that
-
-    glm::mat4 MVP = gamedata.Projection * gamedata.View * ModelMatrix;// makes mvp based of model
-    glUniformMatrix4fv(gamedata.MatrixID, 1, GL_FALSE,&MVP[0][0]);
-
-    glEnableVertexAttribArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glVertexAttribPointer(
-    0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-    3,                  // size
-    GL_FLOAT,           // type
-    GL_FALSE,           // normalized?
-    0,                  // stride
-    (void*)0            // array buffer offset
-    );
-
-    glDrawArrays(GL_TRIANGLES,0,vertlist.size());
-    
-    glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-
-    */
-
-    bool test = true;
-
-    glBegin(GL_TRIANGLES);
-    glVertex3f(-0.5, 0, 0);
-    glVertex3f( 0.5, 0.5, 0);
-    glVertex3f( 0.5,-0.5, 0);
+    glBegin(GL_LINES);
+    for(int i = 0;i < numStepPoints;i++)
+    {
+        for(int j = 0; j< numStepPoints;j++)
+        {
+            if(!i ==  0)//do draw left 
+            {
+                glVertex3f(list[i][j].x,list[i][j].y,list[i][j].z);
+                glVertex3f(list[i-1][j].x,list[i-1][j].y,list[i-1][j].z);
+                //glVertex3f(stepPoints[row][col-1].x,stepPoints[row][col-1].y,stepPoints[row][col-1].z);
+            }
+            
+            if(!j == 0)//do draw up
+            {
+                glVertex3f(list[i][j].x,list[i][j].y,list[i][j].z);
+                glVertex3f(list[i][j-1].x,list[i][j-1].y,list[i][j-1].z);
+                //glVertex3f(stepPoints[row-1][col].x,stepPoints[row-1][col].y,stepPoints[row-1][col].z);
+            }
+        }
+    }
     glEnd();
 
     return true;

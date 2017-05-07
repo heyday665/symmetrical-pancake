@@ -102,7 +102,7 @@ int init_model(struct ENGINEDATA &gamedata)
   if(!gamedata.settings.plyName->empty())
   {
     MODEL *newModel = new MODEL();
-
+    newModel->updatePatch(gamedata.settings.stepSize);
     if(!newModel->loadModel(std::string(gamedata.settings.plyName->c_str())))
     { // cant find a good way to convert from string* to string
       delete newModel; // clean up memory if it dosent load
@@ -287,6 +287,10 @@ int userInputloop(struct ENGINEDATA &gamedata)
   if (keyboard.isdown(SDL_SCANCODE_ESCAPE))
   {
     gamedata.running = 0;
+  }
+  if(keyboard.isdown(SDL_SCANCODE_SPACE))
+  {
+    gamedata.scene1[0]->updatePatch(gamedata.settings.stepSize);
   }
 }
 
