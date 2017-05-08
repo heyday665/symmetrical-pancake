@@ -7,7 +7,9 @@
 #include <vector>
 
 #include <glm/glm.hpp>//libraries
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/closest_point.hpp>
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
 #include <GL/gl.h>
@@ -19,6 +21,9 @@
 #include "modelreader.h"
 #include "keyboard.h"
 #include "mouse.h"
+
+bool mouseDown = false;
+glm::vec3 closestPointToClick = glm::vec3(0);
 
 int init_GLEW()
 {
@@ -73,7 +78,7 @@ int init_SDL(struct ENGINEDATA &gamedata)
     printf("%s\n", SDL_GetError());
     SDL_GL_SetSwapInterval(1);
   }
-
+  return 0;
 }
 
 int init_1(struct ENGINEDATA &gamedata)
@@ -263,6 +268,23 @@ int init_2(struct ENGINEDATA &gamedata)
 int init_3(struct ENGINEDATA &gamedata)
 {// keyboard
   keyboard.start();
+  return 1;
+}
+
+glm::mat3 screenCoOrdNormal(int x, int y, struct ENGINEDATA &gamedata){
+	GLint viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	glm::vec4 viewPorto = glm::vec4(viewport[0],viewport[1], viewport[2], viewport[3]);
+  //printf("%d, %d, %d, %d\n", viewport[0],viewport[1], viewport[2], viewport[3]);
+  glm::vec3 far = glm::unProject(glm::vec3(gamedata.settings.screenWidth-x,gamedata.settings.screenHeight-y,0.0), glm::mat4(1.0f), gamedata.Projection, viewPorto);
+	glm::vec3 near = glm::unProject(glm::vec3(gamedata.settings.screenWidth-x,gamedata.settings.screenHeight-y,1.0), glm::mat4(1.0f), gamedata.Projection, viewPorto);
+	glm::mat3 ret = glm::mat3(far, near, glm::vec3(1,1,1));
+
+	return ret;
+	//printf("%d, %d, %d, %d\n", viewport[0],viewport[1], viewport[2], viewport[3]);
+	//printf("%f \t| %f \t| %f\n", near[0], near[1], near[2]);
+	//printf("%f \t| %f \t| %f\n", far[0], far[1], far[2]);
+	//	glm::vec3 Direction = glm::vec3(near[0]-far[0], near[1]-far[1], near[2]-far[2]);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -273,7 +295,7 @@ int renderloop(struct ENGINEDATA &gamedata)
   glClearColor(0.0f,0.5f,0.5f,1.0f);
 
   int i;
-  for(i = 0;i< gamedata.scene1.size();i++)
+  for(i = 0; i < gamedata.scene1.size();i++)
   {
     gamedata.scene1[i]->render(gamedata.View,gamedata.Projection,gamedata);
   }
@@ -292,6 +314,49 @@ int userInputloop(struct ENGINEDATA &gamedata)
   {
     gamedata.scene1[0]->updatePatch(gamedata.settings.stepSize);
   }
+
+  if ((SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(1)) && (mouseDown == false) ) {
+    printf("MouseClicked\n");
+    mouseDown = true;
+    int mx = 0;
+    int my = 0;
+
+    int currMinX = -1;
+    int currMinY = -1;
+
+    float currMinDist = 1000;
+
+    SDL_GetMouseState(&mx, &my);
+    glm::vec3** bezPoints;
+    bezPoints = gamedata.scene1[0]->fuckingBezShit;
+    for (int jx = 0; jx<4; jx++){
+      for (int jy = 0; jy<4; jy++){
+        glm::vec3 point = bezPoints[jx][jy];
+        glm::mat3 planePoints = screenCoOrdNormal(mx, my, gamedata);
+        glm::vec3 a = planePoints[0];
+        glm::vec3 b = planePoints[1];
+        glm::vec3 pointOnRay = glm::closestPointOnLine(point, a, b);
+        float distance = glm::distance(point, pointOnRay);
+        printf("%d, %d :: distance = %f\n", jx, jy, distance);
+
+        if (distance<=0.2){
+          if (distance<currMinDist){
+            currMinX = jx;
+            currMinY = jy;
+            currMinDist = distance;
+          }
+        }
+      }
+    }
+
+    printf("Closest Point: %d, %d at %f distance\n", currMinX, currMinY, currMinDist);
+
+    while(SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(1)){
+      //do nothing
+    }
+    mouseDown = false;
+  }
+  return 0;
 }
 
 int mainloop(struct ENGINEDATA &gamedata)

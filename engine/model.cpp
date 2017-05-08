@@ -137,7 +137,7 @@ bool MODEL::formatSupported(std::string format) // can be made static
 
 void MODEL::updatePatch(float stepsize)
 {
-    if(stepsize != NULL)
+    if (stepsize != NULL)
     {
         bezList.setStep(stepsize);
     }
@@ -149,7 +149,9 @@ void MODEL::updatePatch(float stepsize)
 bool MODEL::render(glm::mat4 View,glm::mat4 Projection,struct ENGINEDATA &gamedata)
 {
     glm::vec3** list = bezList.getSetpPoints();
+    fuckingBezShit = bezList.getBez();
 
+    glColor3f(1.0f,1.0f,1.0f);
     glBegin(GL_LINES);
     for(int i = 0;i < numStepPoints;i++)
     {
@@ -170,6 +172,17 @@ bool MODEL::render(glm::mat4 View,glm::mat4 Projection,struct ENGINEDATA &gameda
             }
         }
     }
+    glEnd();
+
+    glColor3f(1.0f,0.0f,0.0f);
+    glPointSize(10.0f);
+    glBegin(GL_POINTS);
+
+        for (int ix = 0; ix < 4; ix++){
+            for (int iy = 0; iy < 4; iy++){
+                glVertex3f(fuckingBezShit[ix][iy][0],fuckingBezShit[ix][iy][1],fuckingBezShit[ix][iy][2]);
+            }
+        }
     glEnd();
 
     return true;

@@ -23,14 +23,16 @@ class MODEL
         void transform(glm::vec4);
         void scale(glm::vec4);
         void updatePatch(float);
+        glm::vec3** fuckingBezShit;
         std::string getFilePath();
+
     private:
         void sceneToVertlist();
         const struct aiScene *scene;
         std::string fileName,filePath;
         unsigned int IFlags,EFlags;
-        BEZMAKER bezList;
         GLuint vertexBuffer,colorBuffer;
+        BEZMAKER bezList;
         glm::mat4 ModelMatrix;
         std::vector<glm::vec3> vertlist;
         int numStepPoints;
