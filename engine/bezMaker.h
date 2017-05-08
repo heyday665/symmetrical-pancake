@@ -17,7 +17,7 @@ class BEZMAKER
 		void genPatchPoints();
 		void setStep(float);
 		glm::vec3** getBez();
-		glm::vec3** getSetpPoints();
+		glm::vec3** getStepPoints();
 		int getNumStepPoints();
 		
 		

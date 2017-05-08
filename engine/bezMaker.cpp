@@ -22,7 +22,7 @@
 		return bez;
 	}
 
-	glm::vec3** BEZMAKER::getSetpPoints()
+	glm::vec3** BEZMAKER::getStepPoints()
 	{
 		return stepPoints;
 	}

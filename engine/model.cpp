@@ -1,6 +1,7 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include <fstream>
 
 #include <GL/glew.h>
 #include <assimp/scene.h>
@@ -22,6 +23,7 @@ MODEL::MODEL()
     ModelMatrix = glm::mat4(1.0f);
     bezList.setRand();
     updatePatch(NULL);
+    bezPath = std::string("bezOut.ply");
 }
 
 MODEL::~MODEL()
@@ -44,7 +46,7 @@ bool MODEL::loadModel(std::string path)
         scene = NULL;
     }
 
-    scene = aiImportFile(path.c_str(),IFlags);
+    scene = aiImportFile(path.c_str(), IFlags);
     if(scene == NULL)
     {
         return false;
@@ -105,7 +107,7 @@ bool MODEL::saveModel(std::string path)
         std::cout << "scene is null" << std::endl;
         return false;
     }
-    if((aiExportScene(scene,"ply",path.c_str(),EFlags) & aiReturn_FAILURE) == aiReturn_FAILURE)
+    if((aiExportScene(scene,"ply", path.c_str(), EFlags) & aiReturn_FAILURE) == aiReturn_FAILURE)
     {
         std::cout << "ai export is null" << std::endl;
         return false;
@@ -146,41 +148,41 @@ void MODEL::updatePatch(float stepsize)
     numStepPoints = bezList.getNumStepPoints();
 }
 
-bool MODEL::render(glm::mat4 View,glm::mat4 Projection,struct ENGINEDATA &gamedata)
+bool MODEL::render(glm::mat4 View, glm::mat4 Projection, struct ENGINEDATA &gamedata)
 {
-    glm::vec3** list = bezList.getSetpPoints();
+    glm::vec3** list = bezList.getStepPoints();
     fuckingBezShit = bezList.getBez();
 
-    glColor3f(1.0f,1.0f,1.0f);
+    glColor3f(1.0f, 1.0f, 1.0f);
     glBegin(GL_LINES);
-    for(int i = 0;i < numStepPoints;i++)
+    for (int i = 0; i < numStepPoints; i++)
     {
-        for(int j = 0; j< numStepPoints;j++)
+        for (int j = 0; j < numStepPoints; j++)
         {
-            if(!i ==  0)//do draw left 
+            if (!i ==  0)//do draw left 
             {
-                glVertex3f(list[i][j].x,list[i][j].y,list[i][j].z);
-                glVertex3f(list[i-1][j].x,list[i-1][j].y,list[i-1][j].z);
+                glVertex3f(list[i][j].x, list[i][j].y, list[i][j].z);
+                glVertex3f(list[i-1][j].x, list[i-1][j].y, list[i-1][j].z);
                 //glVertex3f(stepPoints[row][col-1].x,stepPoints[row][col-1].y,stepPoints[row][col-1].z);
             }
             
-            if(!j == 0)//do draw up
+            if (!j == 0)//do draw up
             {
-                glVertex3f(list[i][j].x,list[i][j].y,list[i][j].z);
-                glVertex3f(list[i][j-1].x,list[i][j-1].y,list[i][j-1].z);
+                glVertex3f(list[i][j].x, list[i][j].y, list[i][j].z);
+                glVertex3f(list[i][j-1].x, list[i][j-1].y, list[i][j-1].z);
                 //glVertex3f(stepPoints[row-1][col].x,stepPoints[row-1][col].y,stepPoints[row-1][col].z);
             }
         }
     }
     glEnd();
 
-    glColor3f(1.0f,0.0f,0.0f);
+    glColor3f(1.0f, 0.0f, 0.0f);
     glPointSize(10.0f);
     glBegin(GL_POINTS);
 
         for (int ix = 0; ix < 4; ix++){
             for (int iy = 0; iy < 4; iy++){
-                glVertex3f(fuckingBezShit[ix][iy][0],fuckingBezShit[ix][iy][1],fuckingBezShit[ix][iy][2]);
+                glVertex3f(fuckingBezShit[ix][iy][0], fuckingBezShit[ix][iy][1], fuckingBezShit[ix][iy][2]);
             }
         }
     glEnd();
@@ -204,3 +206,58 @@ void MODEL::transform(glm::vec4 transform)
 {
     //ModelMatrix = ModelMatrix * transform;
 }
+
+void MODEL::bezToPly()
+{
+	ofstream btp;
+	char c;
+	std::string x, y, z;
+	int t = (numStepPoints * numStepPoints);
+	int tx = ( (numStepPoints - 1) * (numStepPoints - 1) );
+	glm::vec3** verts = bezList.getStepPoints();
+	btp.open (bezPath, ios::out | ios::trunc);
+	btp << "ply" << std::endl;
+	btp << "format ascii 1.0" << std::endl;
+	btp << "comment This is the Bez Array formatted to look like a .ply file" << std::endl;
+	c = '0' + t;
+	btp << "element vertex " << c << std::endl;
+	btp << "property float x" << std::endl;
+	btp << "property float y" << std::endl;
+	btp << "property float z" << std::endl;
+	c = '0' + tx;
+	//btp << "element face " << c << std::endl;
+	//btp << "property list uchar int vertex_index" << std::endl;
+	btp << "end_header" << std::endl;
+	
+	for (int i = 0; i < numStepPoints; i++)
+	{
+		for (int j = 0; j < numStepPoints; j++)
+		{
+			x = std::to_string(verts[i][j].x);
+			y = std::to_string(verts[i][j].y);
+			z = std::to_string(verts[i][j].z);
+			btp << x << " " << y << " " << z << endl;
+			
+		}
+	}
+	
+	btp.close();
+}
+
+std::string MODEL::getBezPath()
+{
+	return bezPath;
+}
+
+void MODEL::setBezPath(std::string s)
+{
+	bezPath = s;
+}
+
+
+
+
+
+
+
+
