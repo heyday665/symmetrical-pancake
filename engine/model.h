@@ -39,7 +39,6 @@ class MODEL
         std::vector<glm::vec3> vertlist;
         int numStepPoints;
         void bezToPly();
-        std::vector<glm::vec3> 
 };
 
 #endif

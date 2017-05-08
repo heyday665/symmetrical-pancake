@@ -2,6 +2,8 @@
 #include <map>
 #include <iostream>
 #include <fstream>
+#include <string>
+#include <stdio.h>
 
 #include <GL/glew.h>
 #include <assimp/scene.h>
@@ -209,39 +211,51 @@ void MODEL::transform(glm::vec4 transform)
 
 void MODEL::bezToPly()
 {
-	ofstream btp;
-	char c;
-	std::string x, y, z;
-	int t = (numStepPoints * numStepPoints);
-	int tx = ( (numStepPoints - 1) * (numStepPoints - 1) );
-	glm::vec3** verts = bezList.getStepPoints();
-	btp.open (bezPath, ios::out | ios::trunc);
-	btp << "ply" << std::endl;
-	btp << "format ascii 1.0" << std::endl;
-	btp << "comment This is the Bez Array formatted to look like a .ply file" << std::endl;
-	c = '0' + t;
-	btp << "element vertex " << c << std::endl;
-	btp << "property float x" << std::endl;
-	btp << "property float y" << std::endl;
-	btp << "property float z" << std::endl;
-	c = '0' + tx;
-	//btp << "element face " << c << std::endl;
-	//btp << "property list uchar int vertex_index" << std::endl;
-	btp << "end_header" << std::endl;
-	
-	for (int i = 0; i < numStepPoints; i++)
+	std::ofstream btp;
+	btp.open (bezPath, std::ofstream::trunc);
+	if (btp.is_open())
 	{
-		for (int j = 0; j < numStepPoints; j++)
+		char c;
+		char *bufx, *bufy, *bufz;
+		//std::string x, y, z;
+		int t = (numStepPoints * numStepPoints);
+		int tx = ( (numStepPoints - 1) * (numStepPoints - 1) );
+		glm::vec3** verts = bezList.getStepPoints();
+		btp << "ply" << std::endl;
+		btp << "format ascii 1.0" << std::endl;
+		btp << "comment This is the Bez Array formatted to look like a .ply file" << std::endl;
+		c = '0' + t;
+		btp << "element vertex " << c << std::endl;
+		btp << "property float x" << std::endl;
+		btp << "property float y" << std::endl;
+		btp << "property float z" << std::endl;
+		c = '0' + tx;
+		//btp << "element face " << c << std::endl;
+		//btp << "property list uchar int vertex_index" << std::endl;
+		btp << "end_header" << std::endl;
+	
+		for (int i = 0; i < numStepPoints; i++)
 		{
-			x = std::to_string(verts[i][j].x);
-			y = std::to_string(verts[i][j].y);
-			z = std::to_string(verts[i][j].z);
-			btp << x << " " << y << " " << z << endl;
+			for (int j = 0; j < numStepPoints; j++)
+			{
+				std::sprintf(bufx, "%f", verts[i][j].x);
+				std::sprintf(bufy, "%f", verts[i][j].y);
+				std::sprintf(bufz, "%f", verts[i][j].z);
+				//x = bufx;
+				//y = bufy;
+				//z = bufz;
+				btp << bufx << " " << bufy << " " << bufz << std::endl;
 			
+			}
 		}
+	
+		btp.close();
 	}
 	
-	btp.close();
+	else
+	{
+		std::cout << "Error, couldn't open dummy .ply file!" << std::endl;
+	}
 }
 
 std::string MODEL::getBezPath()

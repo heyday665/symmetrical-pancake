@@ -4,7 +4,7 @@ Executable = displayengine2
 
 SourceFiles = start.cpp modelreader.cpp settings.cpp keyboard.cpp mouse.cpp model.cpp bezMaker.cpp
 
-LinkerFlags = -lm -lSDL2 -lGL -lGLU -lGLEW -lassimp
+LinkerFlags = -lm -lSDL2 -lGL -lGLU -lGLEW -lassimp -std=c++11
 
 Info = "PROJECT: \nAUTHER: Dylan Gebel, \nCONTACTINFO: Dylanfoxx@optonline.net \nDEPENDENCIES: \n"
 
