@@ -214,11 +214,12 @@ void MODEL::bezToPly()
 	btp.open (bezPath, std::ofstream::trunc);
 	if (btp.is_open())
 	{
-		//char *bufx, *bufy, *bufz;
-		std::string c, x, y, z;
+		std::string c, x, y, z, p1, p2, p3, p4;
+		int i, j, counter = 0;
 		int t = (numStepPoints * numStepPoints);
 		int tx = ( (numStepPoints - 1) * (numStepPoints - 1) );
 		glm::vec3** verts = bezList.getStepPoints();
+		glm::vec3* uniVerts = new glm::vec3[t];
 		btp << "ply" << std::endl;
 		btp << "format ascii 1.0" << std::endl;
 		btp << "comment This is the Bez Array formatted to look like a .ply file" << std::endl;
@@ -228,34 +229,45 @@ void MODEL::bezToPly()
 		btp << "property float y" << std::endl;
 		btp << "property float z" << std::endl;
 		c = std::to_string(tx);
-		//btp << "element face " << c << std::endl;
-		//btp << "property list uchar int vertex_index" << std::endl;
+		btp << "element face " << c << std::endl;
+		btp << "property list uchar int vertex_index" << std::endl;
 		btp << "end_header" << std::endl;
 	
-		for (int i = 0; i < numStepPoints; i++)
+		for (i = 0; i < numStepPoints; i++)
 		{
-			for (int j = 0; j < numStepPoints; j++)
+			for (j = 0; j < numStepPoints; j++)
 			{
+				uniVerts[counter] = verts[i][j];
 				x = std::to_string(verts[i][j].x);
 				y = std::to_string(verts[i][j].y);
 				z = std::to_string(verts[i][j].z);
-				//std::sprintf(bufx, "%f", verts[i][j].x);
-				//std::sprintf(bufy, "%f", verts[i][j].y);
-				//std::sprintf(bufz, "%f", verts[i][j].z);
-				//x = bufx;
-				//y = bufy;
-				//z = bufz;
 				btp << x << " " << y << " " << z << std::endl;
-				//btp << bufx << " " << bufy << " " << bufz << std::endl;
-			
+				counter++;
 			}
 		}
 		
+		for (i = 0; i < (t - numStepPoints - 1); i++) 
+		{
+			if ((i + 1) % numStepPoints == 0)
+			{
+				//Skip this iteration
+			}
+
+			else
+			{
+				p1 = std::to_string(i);
+				p2 = std::to_string(i + 1);
+				p3 = std::to_string(i + numStepPoints);
+				p4 = std::to_string(i + numStepPoints + 1);
+				btp << "4 " << p1 << " " << p2 << " " << p3 << " " << p4 << std::endl; 
+			}
+		}
 		
+		//i i+1
+		//i+numStepPoints i+numStepPoints+1
 	
 		btp.close();
 	}
-	
 	else
 	{
 		std::cout << "Error, couldn't open dummy .ply file!" << std::endl;

@@ -337,7 +337,7 @@ int userInputloop(struct ENGINEDATA &gamedata)
         glm::vec3 b = planePoints[1];
         glm::vec3 pointOnRay = glm::closestPointOnLine(point, a, b);
         float distance = glm::distance(point, pointOnRay);
-        printf("%d, %d :: distance = %f\n", jx, jy, distance);
+        //printf("%d, %d :: distance = %f\n", jx, jy, distance);
 
         if (distance<=0.2){
           if (distance<currMinDist){
@@ -349,7 +349,7 @@ int userInputloop(struct ENGINEDATA &gamedata)
       }
     }
 
-    printf("Closest Point: %d, %d at %f distance\n", currMinX, currMinY, currMinDist);
+    //printf("Closest Point: %d, %d at %f distance\n", currMinX, currMinY, currMinDist);
 
     while(SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(1)){
       //do nothing
