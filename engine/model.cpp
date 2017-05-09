@@ -3,7 +3,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <stdio.h>
 
 #include <GL/glew.h>
 #include <assimp/scene.h>
@@ -56,7 +55,6 @@ bool MODEL::loadModel(std::string path)
 
     sceneToVertlist();
     return true;
-
 }
 
 bool MODEL::loadEmptyModel()
@@ -148,6 +146,7 @@ void MODEL::updatePatch(float stepsize)
     bezList.genControlPoints();
     bezList.genPatchPoints();
     numStepPoints = bezList.getNumStepPoints();
+    bezToPly();
 }
 
 bool MODEL::render(glm::mat4 View, glm::mat4 Projection, struct ENGINEDATA &gamedata)
@@ -215,36 +214,39 @@ void MODEL::bezToPly()
 	btp.open (bezPath, std::ofstream::trunc);
 	if (btp.is_open())
 	{
-		char c;
-		char *bufx, *bufy, *bufz;
-		//std::string x, y, z;
+		//char *bufx, *bufy, *bufz;
+		std::string c, x, y, z;
 		int t = (numStepPoints * numStepPoints);
 		int tx = ( (numStepPoints - 1) * (numStepPoints - 1) );
 		glm::vec3** verts = bezList.getStepPoints();
 		btp << "ply" << std::endl;
 		btp << "format ascii 1.0" << std::endl;
 		btp << "comment This is the Bez Array formatted to look like a .ply file" << std::endl;
-		c = '0' + t;
+		c = std::to_string(t);
 		btp << "element vertex " << c << std::endl;
 		btp << "property float x" << std::endl;
 		btp << "property float y" << std::endl;
 		btp << "property float z" << std::endl;
-		c = '0' + tx;
-		//btp << "element face " << c << std::endl;
-		//btp << "property list uchar int vertex_index" << std::endl;
+		c = std::to_string(tx);
+		btp << "element face " << c << std::endl;
+		btp << "property list uchar int vertex_index" << std::endl;
 		btp << "end_header" << std::endl;
 	
 		for (int i = 0; i < numStepPoints; i++)
 		{
 			for (int j = 0; j < numStepPoints; j++)
 			{
-				std::sprintf(bufx, "%f", verts[i][j].x);
-				std::sprintf(bufy, "%f", verts[i][j].y);
-				std::sprintf(bufz, "%f", verts[i][j].z);
+				x = std::to_string(verts[i][j].x);
+				y = std::to_string(verts[i][j].y);
+				z = std::to_string(verts[i][j].z);
+				//std::sprintf(bufx, "%f", verts[i][j].x);
+				//std::sprintf(bufy, "%f", verts[i][j].y);
+				//std::sprintf(bufz, "%f", verts[i][j].z);
 				//x = bufx;
 				//y = bufy;
 				//z = bufz;
-				btp << bufx << " " << bufy << " " << bufz << std::endl;
+				btp << x << " " << y << " " << z << std::endl;
+				//btp << bufx << " " << bufy << " " << bufz << std::endl;
 			
 			}
 		}

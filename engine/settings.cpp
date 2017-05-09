@@ -19,7 +19,7 @@ SETTINGS::SETTINGS()
   SETTINGS::Statsettings.screenWidth = SCREENWIDTH;
   SETTINGS::Statsettings.screenHeight = SCREENHEIGHT;
   SETTINGS::Statsettings.windowName = new std::string("SDL_Window");
-  SETTINGS::Statsettings.plyName = new std::string();
+  SETTINGS::Statsettings.plyName = new std::string("bezOut.ply");
   SETTINGS::Statsettings.stepSize = NULL;
 }
 
@@ -65,7 +65,7 @@ int SETTINGS::parse_opt(int key, char *arg, struct argp_state *state)
       break;
     case 'p':
       delete Statsettings.plyName; // change to model path and make vector
-      SETTINGS::Statsettings.windowName = new std::string(arg);// change this to a vector 
+      SETTINGS::Statsettings.plyName = new std::string(arg);// change this to a vector 
       break;
     case 's':
       SETTINGS::Statsettings.stepSize = atof(arg);
