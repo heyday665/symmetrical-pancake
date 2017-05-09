@@ -228,8 +228,8 @@ void MODEL::bezToPly()
 		btp << "property float y" << std::endl;
 		btp << "property float z" << std::endl;
 		c = std::to_string(tx);
-		btp << "element face " << c << std::endl;
-		btp << "property list uchar int vertex_index" << std::endl;
+		//btp << "element face " << c << std::endl;
+		//btp << "property list uchar int vertex_index" << std::endl;
 		btp << "end_header" << std::endl;
 	
 		for (int i = 0; i < numStepPoints; i++)
@@ -250,6 +250,8 @@ void MODEL::bezToPly()
 			
 			}
 		}
+		
+		
 	
 		btp.close();
 	}
